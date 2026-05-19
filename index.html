@@ -2,51 +2,55 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Créditos</title>
+  <link rel="stylesheet" href="simulador_completo.css">
 </head>
 <body>
  
 <header>
-  <h1>Sistema Básico de Créditos</h1>
-   <link rel="stylesheet" href="simulador_completo.css">
+  <h1>Sistema Bancario de Créditos</h1>
 </header>
  
 <nav>
-  <button onclick="mostrarSeccion(`parametros`);">Parámetros</button>
-  <button onclick="mostrarSeccion(`clientes`);">Clientes</button>
-  <button onclick="mostrarSeccion(`credito`)">Créditos</button>
-  <button onclick="mostrarSeccion(`listaCreditos`)">Créditos Registrados</button>
+  <button onclick="mostrarSeccion('parametros');">Parámetros</button>
+  <button onclick="mostrarSeccion('clientes');">Clientes</button>
+  <button onclick="mostrarSeccion('credito');">Solicitar Crédito</button>
+  <button onclick="mostrarSeccion('listaCreditos');">Créditos Registrados</button>
+  <button onclick="mostrarSeccion('contacto');">Contacto</button>
 </nav>
+
 <section id="parametros">
   <h2>Configurar Parámetros</h2>
- 
-  <label>Tasa de interés:</label>
+  <label>Tasa de interés anual:</label>
   <input type="number" id="tasaInteres" min="10" max="20" value="15">
   <span>%</span>
- 
-  <br>
-  <button onclick="guardarTasa();">Guardar tasa</button>
- 
+  <br><br>
+  
+  <label>Monto Máximo Permitido ($):</label>
+  <input type="number" id="montoMaximoParametros" min="1" value="50000">
+  <br><br>
+  
+  <button onclick="guardarParametros();">Guardar parámetros</button>
   <p id="mensajeTasa"></p>
 </section>
  
-<section id="clientes">
+<section id="clientes" class="activa">
   <h2>Registro de Clientes</h2>
- 
+  <input type="text" id="numero" placeholder="Número de Teléfono">
   <input type="text" id="cedula" placeholder="Cédula">
   <input type="text" id="nombre" placeholder="Nombre">
   <input type="text" id="apellido" placeholder="Apellido">
-  <input type="number" id="ingresos" placeholder="Ingresos">
-  <input type="number" id="egresos" placeholder="Egresos">
- 
-  <br>
- 
-  <button  onclick="guardarCliente();">Guardar cliente</button>
-  <button onclick="limpiar();">Limpiar</button>
+  <input type="number" id="ingresos" placeholder="Ingresos Mensuales">
+  <input type="number" id="egresos" placeholder="Egresos Mensuales">
+  <br><br>
+  <button onclick="guardarCliente();">Guardar cliente</button>
+  <button onclick="limpiar();">Limpiar Campos</button>
  
   <table>
     <thead>
       <tr>
+        <th>Teléfono</th>
         <th>Cédula</th>
         <th>Nombre</th>
         <th>Apellido</th>
@@ -56,126 +60,72 @@
       </tr>
     </thead>
     <tbody id="tablaClientes">
-       <tr>
-          <td>1712345678</td>
-          <td>Juan</td>
-          <td>Pérez</td>
-          <td>1200</td>
-          <td>500</td>
-          <td>
-            <button onclick="pintarClientes();">Actualizar</button>
-            <button>Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>1723456789</td>
-          <td>María</td>
-          <td>Gómez</td>
-          <td>1500</td>
-          <td>600</td>
-          <td>
-            <button>Actualizar</button>
-            <button>Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>1734567890</td>
-          <td>Carlos</td>
-          <td>Ramírez</td>
-          <td>900</td>
-          <td>350</td>
-          <td>
-            <button>Actualizar</button>
-            <button>Eliminar</button>
-          </td>
-        </tr>
     </tbody>
   </table>
 </section>
  
 <section id="credito">
   <h2>Solicitar Crédito</h2>
- 
-  <input type="text" id="buscarCedulaCredito" placeholder="Cédula">
+  <label>Buscar Cliente:</label>
+  <input type="text" id="buscarCedulaCredito" placeholder="Cédula del cliente">
   <button onclick="buscarClienteCredito()">Buscar cliente</button>
  
-  <div id="datosClienteCredito" class="card"></div>
+  <div id="datosClienteCredito" class="card">
+    <p style="color: #777;">Ningún cliente seleccionado.</p>
+  </div>
  
-  <input type="number" id="montoCredito" placeholder="Monto">
-  <input type="number" id="plazoCredito" placeholder="Plazo">
- 
-  <br>
- 
+  <h3>Simulador de Cuotas</h3>
+  <input type="number" id="montoCredito" placeholder="Monto solicitado ($)">
+  <input type="number" id="plazoCredito" placeholder="Plazo (en años)">
+  <br><br>
   <button onclick="simularCredito()">Calcular crédito</button>
  
   <div id="resultadoCredito"></div>
- 
+  <br>
   <button id="btnSolicitarCredito" onclick="solicitarCredito()" disabled>
-    Solicitar crédito
+    Solicitar crédito aprobado
   </button>
 </section>
  
 <section id="listaCreditos">
   <h2>Créditos Registrados</h2>
- 
   <input type="text" id="buscarCedulaListado" placeholder="Ingresar cédula">
   <button onclick="buscarCreditosCliente()">Buscar</button>
   <button onclick="pintarCreditos(creditos)">Ver todos</button>
+  
+  <button onclick="mostrarCreditosVip()">Créditos VIP</button>
  
   <table>
     <thead>
       <tr>
         <th>Cédula</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
+        <th>Cliente</th>
         <th>Monto</th>
         <th>Tasa</th>
         <th>Plazo</th>
-        <th>Cuota</th>
+        <th>Cuota Mensual</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody id="tablaCreditos">
-       <tr>
-          <td>1712345678</td>
-          <td>Juan</td>
-          <td>Pérez</td>
-          <td>3000</td>
-          <td>15%</td>
-          <td>12 meses</td>
-          <td>287.50</td>
-          <td><button>Eliminar</button></td>
-        </tr>
-        <tr>
-          <td>1723456789</td>
-          <td>María</td>
-          <td>Gómez</td>
-          <td>5000</td>
-          <td>14%</td>
-          <td>24 meses</td>
-          <td>237.50</td>
-          <td><button>Eliminar</button></td>
-        </tr>
-        <tr>
-          <td>1734567890</td>
-          <td>Carlos</td>
-          <td>Ramírez</td>
-          <td>1500</td>
-          <td>16%</td>
-          <td>6 meses</td>
-          <td>290.00</td>
-          <td><button>Eliminar</button></td>
-        </tr>
     </tbody>
   </table>
+
+
+  
+</section>
+
+<section id="contacto">
+  <h2>Contacto</h2>
+  <div class="card">
+    <p><strong>Desarrollado por:</strong> Jefferson Quispe</p>
+    <p>Carrera: desarrollador de programas</p>
+    <p>Redes sociales: jeffersonquispecando@gmail.com</p>
+    <p>SI PUEDES IMAGINARLO PUEDES CREARLO </p>
+  </div>
 </section>
  
-<script src="simulador_completo.js"></script>
 <script src="utilitarios.js"></script>
-</body>
- 
- 
- 
 <script src="simulador_completo.js"></script>
-<script src="utilitarios.js"></script>
 </body>
 </html>
