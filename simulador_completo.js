@@ -1,5 +1,5 @@
 let clientes = [
-  { numero: "0945454", cedula: "1748596603", nombre: "Eduardo", apellido: "Guerrero", ingresos: 1000, egresos: 800 }
+  {correo:"jeffersin@gmail.com", numero: "0945454", cedula: "1748596603", nombre: "Eduardo", apellido: "Guerrero", ingresos: 1000, egresos: 800 }
 ];
 let creditos = [];
 let tasaInteres = 15;
@@ -55,6 +55,7 @@ function guardarParametros() {
 }
 
 function guardarCliente() {
+  let correo = recuperaraTexto("correo"); 
   let numero = recuperaraTexto("numero"); 
   let cedula = recuperaraTexto("cedula");
   let nombre  = recuperaraTexto("nombre");
@@ -71,6 +72,7 @@ function guardarCliente() {
  
   if (clienteExiste == null) {
     let cliente = {
+      correo:correo,
       numero: numero,
       cedula: cedula,
       nombre: nombre,
@@ -80,6 +82,7 @@ function guardarCliente() {
     };
     clientes.push(cliente);
   } else {
+    clienteExiste.correo = correo;
     clienteExiste.numero = numero;
     clienteExiste.nombre = nombre;
     clienteExiste.apellido = apellido;
@@ -98,6 +101,7 @@ function pintarClientes() {
   for (let i = 0; i < clientes.length; i++) {
     let cliente = clientes[i];
     tabla.innerHTML += "<tr>" +
+    "<td>" + cliente.correo + "</td>" +
       "<td>" + cliente.numero + "</td>" +
       "<td>" + cliente.cedula + "</td>" +
       "<td>" + cliente.nombre + "</td>" +
@@ -122,6 +126,7 @@ function buscarCliente(cedula) {
 function seleccionarCliente(cedula) {
   clienteSeleccionado = buscarCliente(cedula);
   if (clienteSeleccionado) {
+    mostrarTextoEnCaja("correo", clienteSeleccionado.correo);
     mostrarTextoEnCaja("numero", clienteSeleccionado.numero);
     mostrarTextoEnCaja("cedula", clienteSeleccionado.cedula);
     mostrarTextoEnCaja("nombre", clienteSeleccionado.nombre);
@@ -132,6 +137,7 @@ function seleccionarCliente(cedula) {
 }
  
 function limpiar() {
+  mostrarTextoEnCaja("correo", "");
   mostrarTextoEnCaja("numero", "");
   mostrarTextoEnCaja("cedula", "");
   mostrarTextoEnCaja("nombre", "");
