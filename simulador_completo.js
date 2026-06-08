@@ -1,13 +1,57 @@
-let clientes = [
-  {correo:"jeffersin@gmail.com", numero: "0945454", cedula: "1748596603", nombre: "Eduardo", apellido: "Guerrero", ingresos: 1000, egresos: 800 }
-];
-let creditos = [];
+// Cargar datos guardados en el navegador desde el inicio (si no existen, inicia vacío o por defecto)
+let clientes = JSON.parse(localStorage.getItem("lista_clientes"));
+if (clientes == null) {
+  clientes = [
+    { correo: "jeffersin@gmail.com", numero: "0945454", cedula: "1748596603", nombre: "Eduardo", apellido: "Guerrero", ingresos: 1000, egresos: 800 }
+  ];
+}
+
+let creditos = JSON.parse(localStorage.getItem("lista_creditos"));
+if (creditos == null) {
+  creditos = [];
+}
+
 let tasaInteres = 15;
-let montoMaximo = 50000; // NUEVO: Variable global con el límite máximo por defecto
+let montoMaximo = 50000; 
 let clienteSeleccionado = null;
 let cuotaCalculada = 0;
 let montoCalculado = 0;
 let plazoCalculado = 0;
+
+// Al cargar completamente la página web se cargan las tablas y la preferencia de apariencia
+window.onload = function() {
+  pintarClientes();
+  pintarCreditos(creditos);
+  
+  // Recuperar apariencia elegida anteriormente
+  let temaGuardado = localStorage.getItem("tema_apariencia");
+  if (temaGuardado === "claro") {
+    document.body.classList.add("claro");
+    let btn = document.getElementById("btnTema");
+    if (btn) {
+      btn.innerText = "🌙 Modo Oscuro";
+      btn.style.background = "linear-gradient(135deg, #334155 0%, #1e293b 100%)";
+    }
+  }
+};
+
+// Función para cambiar de tono claro a oscuro y viceversa
+function alternarTema() {
+  let cuerpo = document.body;
+  let btn = document.getElementById("btnTema");
+  
+  cuerpo.classList.toggle("claro");
+  
+  if (cuerpo.classList.contains("claro")) {
+    btn.innerText = "🌙 Modo Oscuro";
+    btn.style.background = "linear-gradient(135deg, #334155 0%, #1e293b 100%)";
+    localStorage.setItem("tema_apariencia", "claro");
+  } else {
+    btn.innerText = "☀️ Modo Claro";
+    btn.style.background = "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)";
+    localStorage.setItem("tema_apariencia", "oscuro");
+  }
+}
 
 // Oculta todas las secciones antes de mostrar la activa
 function ocultarSecciones() {
@@ -23,19 +67,16 @@ function mostrarSeccion(id) {
   ocultarSecciones();
   document.getElementById(id).classList.add("activa");
   
-  // Carga inicial automatizada de tablas al cambiar de sección
   if (id === "clientes") {
     pintarClientes();
   }
 }
 
-// NUEVO: Reemplaza a guardarTasa para actualizar y validar ambos parámetros a la vez
 function guardarParametros() {
   let tasa = recuperarFloat("tasaInteres");
   let maximo = recuperarFloat("montoMaximoParametros");
   let mensaje = "";
 
-  // Validar Tasa de Interés
   if (tasa >= 10 && tasa <= 20) {
     tasaInteres = tasa;
     mensaje += "Tasa configurada correctamente: " + tasa + "%. ";
@@ -43,7 +84,6 @@ function guardarParametros() {
     mensaje += "La tasa debe estar entre 10% y 20%. ";
   }
 
-  // Validar Monto Máximo
   if (!isNaN(maximo) && maximo > 0) {
     montoMaximo = maximo;
     mensaje += "Monto máximo configurado en: $" + maximo + ".";
@@ -72,7 +112,7 @@ function guardarCliente() {
  
   if (clienteExiste == null) {
     let cliente = {
-      correo:correo,
+      correo: correo,
       numero: numero,
       cedula: cedula,
       nombre: nombre,
@@ -90,18 +130,22 @@ function guardarCliente() {
     clienteExiste.egresos = egresos;
   }
  
+  // Guardado permanente en el navegador
+  localStorage.setItem("lista_clientes", JSON.stringify(clientes));
+
   pintarClientes();
   limpiar();
 }
 
 function pintarClientes() {
   let tabla = document.getElementById("tablaClientes");
+  if (tabla == null) return;
   tabla.innerHTML = "";
  
   for (let i = 0; i < clientes.length; i++) {
     let cliente = clientes[i];
     tabla.innerHTML += "<tr>" +
-    "<td>" + cliente.correo + "</td>" +
+      "<td>" + cliente.correo + "</td>" +
       "<td>" + cliente.numero + "</td>" +
       "<td>" + cliente.cedula + "</td>" +
       "<td>" + cliente.nombre + "</td>" +
@@ -153,6 +197,8 @@ function eliminarCliente(cedula) {
       break;
     }
   }
+  // Actualizar el almacenamiento al borrar un cliente
+  localStorage.setItem("lista_clientes", JSON.stringify(clientes));
   pintarClientes();
 }
  
@@ -172,7 +218,7 @@ function buscarClienteCredito() {
   } else {
     clienteSeleccionado = null;
     alert("Cliente no encontrado. Regístrelo primero en la pestaña Clientes.");
-    document.getElementById("datosClienteCredito").innerHTML = "";
+    document.getElementById("datosClienteCredito").innerHTML = "<p style='color: #777;'>Ningún cliente seleccionado.</p>";
   }
 }
  
@@ -217,11 +263,10 @@ function simularCredito() {
     return;
   }
 
-  // NUEVO: Validación estricta del tope de monto máximo otorgable
   if (floatMonto > montoMaximo) {
     alert("Error: El monto solicitado ($" + floatMonto + ") es superior al valor permitido por el sistema ($" + montoMaximo + ").");
-    mostrarTextoEnCaja("montoCredito", ""); // Limpia la caja usando utilitarios.js
-    return; // Detiene la ejecución completa de la simulación
+    mostrarTextoEnCaja("montoCredito", ""); 
+    return; 
   }
  
   let disponible = calcularDisponible(clienteSeleccionado.ingresos, clienteSeleccionado.egresos);
@@ -263,11 +308,16 @@ function solicitarCredito() {
   };
   
   creditos.push(credito);
+  
+  // Guardado permanente de los créditos solicitados
+  localStorage.setItem("lista_creditos", JSON.stringify(creditos));
+
   alert("Crédito registrado exitosamente.");
   
   document.getElementById("btnSolicitarCredito").disabled = true;
   document.getElementById("resultadoCredito").innerHTML = "";
   document.getElementById("resultadoCredito").className = "";
+  pintarCreditos(creditos);
 }
  
 function buscarCreditos(cedula) {
@@ -282,8 +332,8 @@ function buscarCreditos(cedula) {
  
 function pintarCreditos(arregloCreditos) {
   let tabla = recuperarElemento("tablaCreditos");
+  if (tabla == null) return;
   let contenido = "";
-  
   
   for (let i = 0; i < arregloCreditos.length; i++) {
     let credito = arregloCreditos[i];
@@ -317,22 +367,17 @@ function eliminarCredito(cedula) {
       break;
     }
   }
+  // Actualizar almacenamiento al borrar un crédito del historial
+  localStorage.setItem("lista_creditos", JSON.stringify(creditos));
   pintarCreditos(creditos);
 }
 
-/* ==========================================================================
-   NUEVO: Función para filtrar y mostrar solo Créditos VIP (> 5000)
-   ========================================================================== */
 function mostrarCreditosVip() {
   let creditosVip = [];
-  
-  // Filtramos los créditos cuyo monto sea estrictamente mayor a 5000
   for (let i = 0; i < creditos.length; i++) {
     if (creditos[i].monto > 5000) {
       creditosVip.push(creditos[i]);
     }
   }
-  
-  // Renderizamos el arreglo filtrado en la misma tabla de créditos
   pintarCreditos(creditosVip);
 }
