@@ -1,0 +1,73 @@
+/* diseño2.css - Estilo Moderno */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+    color: #333;
+}
+
+.contenedor {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    width: 350px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #aa0000; /* Rojo distintivo */
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-weight: 300;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    box-sizing: border-box; /* Importante para el ancho */
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #aa0000;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #aa0000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #880000;
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Créditos</title>
+  <link rel="stylesheet" href="simulador_completo.css">
+</head>
+<body>
+ 
+<header>
+  <h1>Sistema Bancario de Créditos</h1>
+</header>
+ 
+<nav>
+  <button onclick="mostrarSeccion('parametros');">Parámetros</button>
+  <button onclick="mostrarSeccion('clientes');">Clientes</button>
+  <button onclick="mostrarSeccion('credito');">Solicitar Crédito</button>
+  <button onclick="mostrarSeccion('listaCreditos');">Créditos Registrados</button>
+  <button onclick="mostrarSeccion('contacto');">Contacto</button>
+  <button id="btnTema" onclick="alternarTema();" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); margin-left: auto;">☀️ Modo Claro</button>
+</nav>
+
+<section id="parametros">
+  <h2>Configurar Parámetros</h2>
+  <label>Tasa de interés anual:</label>
+  <input type="number" id="tasaInteres" min="10" max="20" value="15">
+  <span>%</span>
+  <br><br>
+  
+  <label>Monto Máximo Permitido ($):</label>
+  <input type="number" id="montoMaximoParametros" min="1" value="50000">
+  <br><br>
+  
+  <button onclick="guardarParametros();">Guardar parámetros</button>
+  <p id="mensajeTasa"></p>
+</section>
+ 
+<section id="clientes" class="activa">
+  <h2>Registro de Clientes</h2>
+  <input type="text" id="correo" placeholder="Correo">
+  <input type="text" id="numero" placeholder="Número de Teléfono">
+  <input type="text" id="cedula" placeholder="Cédula">
+  <input type="text" id="nombre" placeholder="Nombre">
+  <input type="text" id="apellido" placeholder="Apellido">
+  <input type="number" id="ingresos" placeholder="Ingresos Mensuales">
+  <input type="number" id="egresos" placeholder="Egresos Mensuales">
+  <br><br>
+  <button onclick="guardarCliente();">Guardar cliente</button>
+  <button onclick="limpiar();">Limpiar Campos</button>
+ 
+  <table>
+    <thead>
+      <tr>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Ingresos</th>
+        <th>Egresos</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaClientes">
+    </tbody>
+  </table>
+</section>
+ 
+<section id="credito">
+  <h2>Solicitar Crédito</h2>
+  <label>Buscar Cliente:</label>
+  <input type="text" id="buscarCedulaCredito" placeholder="Cédula del cliente">
+  <button onclick="buscarClienteCredito()">Buscar cliente</button>
+ 
+  <div id="datosClienteCredito" class="card">
+    <p style="color: #777;">Ningún cliente seleccionado.</p>
+  </div>
+ 
+  <h3>Simulador de Cuotas</h3>
+  <input type="number" id="montoCredito" placeholder="Monto solicitado ($)">
+  <input type="number" id="plazoCredito" placeholder="Plazo (en años)">
+  <br><br>
+  <button onclick="simularCredito()">Calcular crédito</button>
+ 
+  <div id="resultadoCredito"></div>
+  <br>
+  <button id="btnSolicitarCredito" onclick="solicitarCredito()" disabled>
+    Solicitar crédito aprobado
+  </button>
+</section>
+ 
+<section id="listaCreditos">
+  <h2>Créditos Registrados</h2>
+  <input type="text" id="buscarCedulaListado" placeholder="Ingresar cédula">
+  <button onclick="buscarCreditosCliente()">Buscar</button>
+  <button onclick="pintarCreditos(creditos)">Ver todos</button>
+  <button onclick="mostrarCreditosVip()">Créditos VIP</button>
+ 
+  <table>
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Cliente</th>
+        <th>Monto</th>
+        <th>Tasa</th>
+        <th>Plazo</th>
+        <th>Cuota Mensual</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaCreditos">
+    </tbody>
+  </table>
+</section>
+
+<section id="contacto">
+  <h2>Contacto</h2>
+  <div class="card">
+    <p><strong>Desarrollado por:</strong> Jefferson Quispe</p>
+    <p>Carrera: desarrollador de programas</p>
+    <p>Redes sociales: jeffersonquispecando@gmail.com</p>
+    <p>SI PUEDES IMAGINARLO PUEDES CREARLO </p>
+  </div>
+</section>
+ 
+<script src="utilitarios.js"></script>
+<script src="simulador_completo.js"></script>
+</body>
+</html>
